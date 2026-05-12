@@ -30,8 +30,8 @@ describe('HumanAuth Circuit Tests', () => {
     expect(result.valid).toBe(true);
     expect(result.publicSignals).toHaveLength(3);
     expect(result.publicSignals![0]).toBeTruthy(); // humanCommitment
-    expect(result.publicSignals![1]).toBeTruthy(); // contentHash
-    expect(result.publicSignals![2]).toBeTruthy(); // timestamp
+    expect(result.publicSignals![1]).toBeTruthy(); // out_contentHash
+    expect(result.publicSignals![2]).toBeTruthy(); // out_timestamp
   });
 
   test('Invalid biometric hash should fail verification', async () => {

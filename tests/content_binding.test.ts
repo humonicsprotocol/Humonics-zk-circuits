@@ -29,9 +29,9 @@ describe('ContentBinding Circuit Tests', () => {
     
     expect(result.valid).toBe(true);
     expect(result.publicSignals).toHaveLength(3);
-    expect(result.publicSignals![0]).toBeTruthy(); // contentHash
+    expect(result.publicSignals![0]).toBeTruthy(); // out_contentHash
     expect(result.publicSignals![1]).toBeTruthy(); // certCommitment
-    expect(result.publicSignals![2]).toBeTruthy(); // timestamp
+    expect(result.publicSignals![2]).toBeTruthy(); // out_timestamp
   });
 
   test('Invalid content hash should fail verification', async () => {
