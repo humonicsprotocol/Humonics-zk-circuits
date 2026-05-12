@@ -1,0 +1,42 @@
+{
+  "name": "@humonics/zk-circuits",
+  "version": "1.0.0",
+  "description": "Zero-knowledge circuits for Humonics protocol human verification",
+  "main": "scripts/verify.ts",
+  "scripts": {
+    "compile": "./scripts/compile.sh",
+    "setup": "./scripts/trusted_setup.sh",
+    "test": "jest",
+    "test:human": "jest human_auth.test.ts",
+    "test:content": "jest content_binding.test.ts",
+    "test:oracle": "jest oracle_attestation.test.ts"
+  },
+  "keywords": [
+    "zero-knowledge",
+    "circom",
+    "snarkjs",
+    "cryptography",
+    "identity",
+    "humonics"
+  ],
+  "author": "Humonics Protocol",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "circom": "^0.5.46",
+    "circomlib": "^2.0.5",
+    "crypto": "^1.0.1",
+    "ffjavascript": "^0.3.1",
+    "snarkjs": "^0.7.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

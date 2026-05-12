@@ -1,0 +1,11 @@
+1,4,0,main.biometricHash
+2,5,0,main.deviceBinding
+3,6,0,main.oracleSignature[0]
+4,7,0,main.oracleSignature[1]
+5,8,0,main.did
+6,9,0,main.nonce
+7,1,0,main.humanCommitment
+8,2,0,main.contentHash
+9,3,0,main.timestamp
+10,10,0,main.oraclePubKey[0]
+11,11,0,main.oraclePubKey[1]

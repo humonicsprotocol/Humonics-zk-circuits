@@ -1,0 +1,5 @@
+1,4,0,main.did
+2,5,0,main.humanCommitment
+3,1,0,main.contentHash
+4,2,0,main.certCommitment
+5,3,0,main.timestamp
