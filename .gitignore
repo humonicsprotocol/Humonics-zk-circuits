@@ -1,0 +1,22 @@
+node_modules/
+
+# Compiled artifacts — never commit .zkey files (only checksums.txt)
+artifacts/human_auth/*.r1cs
+artifacts/human_auth/*.wasm
+artifacts/human_auth/*.zkey
+artifacts/human_auth/*.sym
+artifacts/content_binding/*.r1cs
+artifacts/content_binding/*.wasm
+artifacts/content_binding/*.zkey
+artifacts/content_binding/*.sym
+artifacts/oracle_attestation/*.r1cs
+artifacts/oracle_attestation/*.wasm
+artifacts/oracle_attestation/*.zkey
+artifacts/oracle_attestation/*.sym
+
+# Powers of Tau files (large — download separately)
+*.ptau
+
+# Circom build output in root
+*.sym
+*.r1cs
