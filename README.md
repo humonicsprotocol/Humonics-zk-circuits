@@ -11,7 +11,7 @@ This repository contains the cryptographic heart of the Humonics protocol, imple
 ### Circuits
 
 - **`human_auth.circom`** - Proves biometric + oracle attestation without revealing identity
-- **`content_binding.circom`** - Binds content hash to verified DID 
+- **`content_binding.circom`** - Binds content hash to verified DID
 - **`oracle_attestation.circom`** - Validates oracle signature without revealing signed payload
 
 ### Security Principles
@@ -81,126 +81,90 @@ Compile circuits to R1CS and WASM:
 npm run compile
 ```
 
-This generates:
-- `*.r1cs` - Rank-1 Constraint System files
-- `*.wasm` - WebAssembly files for proof generation
-- `*.sym` - Symbol files for debugging
-
-### 3. Trusted Setup
-
-Perform the trusted setup ceremony:
-
-```bash
-# Download Powers of Tau (phase 1)
-wget https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_20.ptau -O pot12_0000.ptau
-
-# Run circuit-specific setup (phase 2)
-./scripts/trusted_setup.sh
-
-# Or use npm script
-npm run setup
-```
-
-This generates:
-- `*_final.zkey` - Proving keys (keep secure!)
-- `verification_key.json` - Verification keys
-- `verifier.sol` - Solidity verifier contracts
-
-### 4. Testing
-
-Run comprehensive tests:
-
-```bash
-# Run all tests
-npm test
-
-# Run specific circuit tests
-npm run test:human
-npm run test:content
-npm run test:oracle
-```
-
-## Circuit Details
-
-### human_auth.circom
-
-**Purpose**: Prove human authentication without revealing identity
-
-**Private Inputs**:
 - `biometricHash` - Salted hash of biometric probe
 - `deviceBinding` - Device keypair commitment
 - `oracleSignature[2]` - ECDSA signature from trusted oracle
 - `did` - Creator's Stellar DID
 - `nonce` - One-time nonce preventing replay
 
-**Public Outputs**:
+**Public Outputs:**
+
 - `humanCommitment` - Poseidon(did, nonce)
 - `contentHash` - SHA-256 of certified content
 - `timestamp` - Unix timestamp of attestation
 
-### content_binding.circom
+### Content Binding (`content_binding.circom`)
 
-**Purpose**: Bind content to verified human without revealing which human
+**Private Inputs:**
 
-**Private Inputs**:
 - `did` - Creator's Stellar DID
 - `humanCommitment` - From human_auth.circom output
 
-**Public Outputs**:
+**Public Outputs:**
+
 - `contentHash` - SHA-256 of content being certified
 - `certCommitment` - Poseidon(contentHash, humanCommitment, timestamp)
 - `timestamp` - Unix timestamp of binding
 
-### oracle_attestation.circom
+### Oracle Attestation (`oracle_attestation.circom`)
 
-**Purpose**: Validate oracle signature without revealing signed payload
+**Private Inputs:**
 
-**Private Inputs**:
 - `attestationHash` - Hash of attestation data
 - `oracleSignature[2]` - ECDSA signature from trusted oracle
-- `timestamp` - Unix timestamp of attestation
 
-**Public Outputs**:
+**Public Outputs:**
+
 - `validAttestation` - Boolean indicating signature validity
 - `oracleId` - Identifier of which oracle signed
 - `timestampHash` - Hash of timestamp for verification
 
-## Security Considerations
+## Build System
 
-### Critical Security Rules
+```bash
+# Compile all circuits
+./scripts/compile.sh
 
-1. **Never commit .zkey files** - Only commit their SHA-256 hashes
-2. **Never expose PII** - All identity data must remain private
-3. **Always use nonces** - Prevent replay attacks
-4. **Validate timestamps** - Prevent old/future timestamps
-5. **Hardcode oracle keys** - Never accept oracle keys as inputs
+# Run trusted setup (requires Powers of Tau)
+./scripts/trusted_setup.sh
 
-### Threat Mitigations
+# Run tests
+npm test
+```
 
-- **Replay attacks** - Nonces and timestamp validation
-- **Identity exposure** - Zero-knowledge proofs hide all PII
-- **Oracle compromise** - Multiple oracle redundancy
-- **Circuit bugs** - Comprehensive test coverage
+## Testing
+
+Comprehensive test suite covering:
+
+- **Valid proof generation and verification**
+- **Invalid biometric scenarios**
+- **Replay attack prevention**
+- **Oracle signature validation**
+- **Timestamp validation**
+
+## Security
+
+- **Zero-knowledge proofs** - Prove verification without revealing identity
+- **Hardcoded oracle keys** - Never expose oracle keys as inputs
+- **Nonce-based replay protection** - Prevents replay attacks
+- **Minimal public signals** - Only essential data revealed
 
 ## Integration
 
-### Proof Generation
+The circuits are designed for seamless integration with:
 
-```typescript
-import { verifier } from './scripts/verify';
+- **Smart contract verification** - Generated Solidity verifiers
+- **TypeScript helper** - Complete proof generation/verification API
+- **Test fixtures** - Synthetic data (no real identity information)
 
-// Generate proof
-const proofData = await verifier.generateProof('human_auth', inputs);
+## Dependencies
 
-// Verify proof
-const result = await verifier.verifyHumanAuth(proofData);
-```
+- **circom** - Circuit compilation (0.5.46)
+- **snarkjs** - Proof generation and verification
+- **circomlib** - Standard circuit library
+- **Node.js >= 18** - Runtime environment
 
-### Smart Contract Integration
-
-The generated `verifier.sol` contracts can be deployed to Soroban/EVM chains for on-chain verification.
-
-## File Structure
+## Repository Structure
 
 ```
 zk-circuits/
@@ -212,27 +176,16 @@ zk-circuits/
 │   ├── compile.sh
 │   ├── trusted_setup.sh
 │   └── verify.ts
-├── tests/                     # Test files
+├── tests/                     # Test suite
 │   ├── *.test.ts
 │   └── fixtures/
 ├── artifacts/                  # Compiled output (gitignored)
 │   ├── human_auth/
 │   ├── content_binding/
 │   └── oracle_attestation/
-├── CLAUDE.md                  # AI assistant instructions
 └── README.md                  # This file
 ```
 
-## Dependencies
-
-- **circom** - Circuit compilation
-- **snarkjs** - Proof generation/verification
-- **circomlib** - Standard circuit library
-- **ffjavascript** - Finite field arithmetic
-
-## Contributing
-
-1. Follow the circuit design rules in `CLAUDE.md`
 2. Add comprehensive tests for any new circuits
 3. Never commit sensitive artifacts (.zkey files)
 4. Update documentation for any API changes
@@ -244,6 +197,7 @@ MIT License - see LICENSE file for details.
 ## Support
 
 For questions or issues:
+
 - Review the test files for usage examples
 - Check the circuit files for implementation details
 - Refer to `CLAUDE.md` for development guidelines
